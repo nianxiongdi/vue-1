@@ -13,10 +13,11 @@ function Vue (options) {
     // new 必须通过new的实例化
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
-  this._init(options)
+  // init
+  this._init(options) // 和23行代码有关
 }
 
-// class 是一个大文件 
+// class 是一个大文件
 
 // 原型上挂在Vue.prototype._init
 initMixin(Vue)

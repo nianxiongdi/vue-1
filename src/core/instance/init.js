@@ -13,7 +13,9 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+  // this.init()
   Vue.prototype._init = function (options?: Object) {
+    // vm为Vue的实例
     const vm: Component = this
     // a uid
     vm._uid = uid++
@@ -28,7 +30,9 @@ export function initMixin (Vue: Class<Component>) {
 
     // a flag to avoid this being observed
     vm._isVue = true
-    // merge options
+    // merge options 合并options
+    // 可以通过 vm.$options.el去访问
+    // vm.$options.data 定义的data
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -49,14 +53,15 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
+    // 初始化
+    initLifecycle(vm) // 初始化一些和生命周期相关的内容
+    initEvents(vm) // 初始化事件相关属性，当有父组件的方法绑定在子组件时候，供子组件调用
+    initRender(vm) // 添加slot属性
+    callHook(vm, 'beforeCreate') // 调用beforeCreate钩子
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm) // 初始化数据，进行双向绑定 state/props
     initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    callHook(vm, 'created')  // 调用created钩子
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -66,6 +71,7 @@ export function initMixin (Vue: Class<Component>) {
     }
 
     if (vm.$options.el) {
+      // 挂载
       vm.$mount(vm.$options.el)
     }
   }

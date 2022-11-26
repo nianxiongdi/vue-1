@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue.js modal component example</title>
+    <!-- Delete ".min" for console warnings in development -->
+    <script src="../../dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+ 
+    <!-- app -->
+    <div id="app">
+      123
+    </div>
+
+    <script>
+      // debugger
+      // start app
+      new Vue({
+        el: '#app',
+        data: {
+          msg: 'hello world~'
+        },
+        mounted() {
+          // 为什么可以访问data的数据？
+          console.log(this.msg)
+          console.log(this._data.msg)
+        }
+      })
+    </script>
+  </body>
+</html>

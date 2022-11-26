@@ -3,7 +3,7 @@ node_modules
 *.log
 explorations
 TODOs.md
-dist/*.gz
+dist/*
 dist/*.map
 dist/vue.common.min.js
 test/e2e/reports
