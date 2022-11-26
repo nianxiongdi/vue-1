@@ -37,8 +37,11 @@ const resolve = p => {
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs': {
+    // 入口
     entry: resolve('web/entry-runtime.js'),
+    // 打包后代码
     dest: resolve('dist/vue.runtime.common.js'),
+    // 编译模块格式
     format: 'cjs',
     banner
   },

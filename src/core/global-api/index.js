@@ -17,6 +17,7 @@ import {
   defineReactive
 } from '../util/index'
 
+// initGlobalAPI
 export function initGlobalAPI (Vue: GlobalAPI) {
   // config
   const configDef = {}
@@ -39,12 +40,13 @@ export function initGlobalAPI (Vue: GlobalAPI) {
     mergeOptions,
     defineReactive
   }
-
+  // 挂载全局静态方法
   Vue.set = set
   Vue.delete = del
   Vue.nextTick = nextTick
 
   Vue.options = Object.create(null)
+  // 
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
@@ -52,11 +54,15 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   // this is used to identify the "base" constructor to extend all plain-object
   // components with in Weex's multi-instance scenarios.
   Vue.options._base = Vue
-
+  // KeepAlive 内置组件
   extend(Vue.options.components, builtInComponents)
 
+  // Vue.use全局方法
   initUse(Vue)
+  // Vue.mixin全局方法
   initMixin(Vue)
+  // Vue.extend全局方法
   initExtend(Vue)
+  // 获取一些全局的方法
   initAssetRegisters(Vue)
 }

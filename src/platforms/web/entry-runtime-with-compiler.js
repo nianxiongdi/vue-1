@@ -15,6 +15,7 @@ const idToTemplate = cached(id => {
 })
 
 const mount = Vue.prototype.$mount
+// 挂在$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
