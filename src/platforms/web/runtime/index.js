@@ -35,8 +35,12 @@ extend(Vue.options.components, platformComponents)
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
+// runtime only版本
 Vue.prototype.$mount = function (
+  // 1. 它表示挂载的元素，可以是字符串，也可以是 DOM 对象.
+  // 如果是字符串在浏览器环境下会调用 query 方法转换成 DOM 对象的。
   el?: string | Element,
+  // 2. 和服务端渲染相关，在浏览器环境下我们不需要传第二个参数。
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
