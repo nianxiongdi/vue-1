@@ -13,7 +13,6 @@
     <div id="app">
       123
     </div>
-
     <script>
       // debugger
       // start app
@@ -21,6 +20,19 @@
         el: '#app',
         data: {
           msg: 'hello world~'
+        },
+        // 实现render会替换到页面上的元素
+        render(createElement){
+          console.log(createElement('div', {
+            attrs: {
+              id: 'app1'
+            }
+          }, '12'))
+          return createElement('div', {
+            attrs: {
+              id: 'app1'
+            }
+          }, '12')
         },
         mounted() {
           // 为什么可以访问data的数据？

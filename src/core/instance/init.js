@@ -46,9 +46,11 @@ export function initMixin (Vue: Class<Component>) {
       )
     }
     /* istanbul ignore else */
+    // 开发环境会代理
     if (process.env.NODE_ENV !== 'production') {
       initProxy(vm)
     } else {
+      // 生产环境
       vm._renderProxy = vm
     }
     // expose real self

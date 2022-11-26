@@ -15,9 +15,11 @@ import { isFalse, isTrue, isDef, isUndef, isPrimitive } from 'shared/util'
 // normalization is needed - if any child is an Array, we flatten the whole
 // thing with Array.prototype.concat. It is guaranteed to be only 1-level deep
 // because functional components already normalize their own children.
+// children是二位数据，则进行摊平一层
 export function simpleNormalizeChildren (children: any) {
   for (let i = 0; i < children.length; i++) {
     if (Array.isArray(children[i])) {
+      // 嵌套一层做摊平
       return Array.prototype.concat.apply([], children)
     }
   }
@@ -29,9 +31,9 @@ export function simpleNormalizeChildren (children: any) {
 // with hand-written render functions / JSX. In such cases a full normalization
 // is needed to cater to all possible types of children values.
 export function normalizeChildren (children: any): ?Array<VNode> {
-  return isPrimitive(children)
-    ? [createTextVNode(children)]
-    : Array.isArray(children)
+  return isPrimitive(children) // 基础类型
+    ? [createTextVNode(children)] // 返回文本vnode
+    : Array.isArray(children) // 数据处理
       ? normalizeArrayChildren(children)
       : undefined
 }
@@ -39,9 +41,9 @@ export function normalizeChildren (children: any): ?Array<VNode> {
 function isTextNode (node): boolean {
   return isDef(node) && isDef(node.text) && isFalse(node.isComment)
 }
-
+// 多层children存在数组，则进行递归
 function normalizeArrayChildren (children: any, nestedIndex?: string): Array<VNode> {
-  const res = []
+  const res = [] // 摊平的数组
   let i, c, lastIndex, last
   for (i = 0; i < children.length; i++) {
     c = children[i]
@@ -49,17 +51,22 @@ function normalizeArrayChildren (children: any, nestedIndex?: string): Array<VNo
     lastIndex = res.length - 1
     last = res[lastIndex]
     //  nested
+    // 判断为数组
     if (Array.isArray(c)) {
       if (c.length > 0) {
         c = normalizeArrayChildren(c, `${nestedIndex || ''}_${i}`)
         // merge adjacent text nodes
+        // 当前处理节点和上次处理节点都是文本类型，则进行合并
+        // res = [1,2,3]
+        // current_children = [ 'text', 'componet type']
+        // 3与text合并
         if (isTextNode(c[0]) && isTextNode(last)) {
           res[lastIndex] = createTextVNode(last.text + (c[0]: any).text)
           c.shift()
         }
         res.push.apply(res, c)
       }
-    } else if (isPrimitive(c)) {
+    } else if (isPrimitive(c)) { // 基础类型
       if (isTextNode(last)) {
         // merge adjacent text nodes
         // this is necessary for SSR hydration because text nodes are
@@ -69,7 +76,7 @@ function normalizeArrayChildren (children: any, nestedIndex?: string): Array<VNo
         // convert primitive to vnode
         res.push(createTextVNode(c))
       }
-    } else {
+    } else { // 其他
       if (isTextNode(c) && isTextNode(last)) {
         // merge adjacent text nodes
         res[lastIndex] = createTextVNode(last.text + c.text)
