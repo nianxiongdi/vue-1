@@ -26,6 +26,7 @@ export function createComment (text: string): Comment {
   return document.createComment(text)
 }
 
+// insertBefore
 export function insertBefore (parentNode: Node, newNode: Node, referenceNode: Node) {
   parentNode.insertBefore(newNode, referenceNode)
 }

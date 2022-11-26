@@ -11,7 +11,7 @@
  
     <!-- app -->
     <div id="app">
-      123
+      {{msg}}
     </div>
     <script>
       // debugger
@@ -21,19 +21,19 @@
         data: {
           msg: 'hello world~'
         },
-        // 实现render会替换到页面上的元素
-        render(createElement){
-          console.log(createElement('div', {
-            attrs: {
-              id: 'app1'
-            }
-          }, '12'))
-          return createElement('div', {
-            attrs: {
-              id: 'app1'
-            }
-          }, '12')
-        },
+        // 实现render会替换到页面上的元素 <div id="app"></div>
+        // render(createElement){
+        //   console.log(createElement('div', {
+        //     attrs: {
+        //       id: 'app1'
+        //     }
+        //   }, '12'))
+        //   return createElement('div', {
+        //     attrs: {
+        //       id: 'app1'
+        //     }
+        //   }, '12')
+        // },
         mounted() {
           // 为什么可以访问data的数据？
           console.log(this.msg)

@@ -29,7 +29,7 @@ import {
 } from '../util/index'
 
 export const emptyNode = new VNode('', {}, [])
-
+// patch过程会执行一些钩子
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
 function sameVnode (a, b) {
@@ -66,7 +66,7 @@ function createKeyToOldIdx (children, beginIdx, endIdx) {
   }
   return map
 }
-
+// this
 export function createPatchFunction (backend) {
   let i, j
   const cbs = {}
@@ -81,7 +81,7 @@ export function createPatchFunction (backend) {
       }
     }
   }
-
+  // 真实的dom 转换为vnode
   function emptyNodeAt (elm) {
     return new VNode(nodeOps.tagName(elm).toLowerCase(), {}, [], undefined, elm)
   }
@@ -121,7 +121,8 @@ export function createPatchFunction (backend) {
   }
 
   let creatingElmInVPre = 0
-
+  // vnode 挂载到真实的dom上
+  // createElm 的作用是通过虚拟节点创建真实的 DOM 并插入到它的父节点中。
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -141,6 +142,7 @@ export function createPatchFunction (backend) {
     }
 
     vnode.isRootInsert = !nested // for transition enter check
+    // createComponent 方法目的是尝试创建子组件
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
@@ -162,7 +164,7 @@ export function createPatchFunction (backend) {
           )
         }
       }
-
+      // 创建标签元素
       vnode.elm = vnode.ns
         ? nodeOps.createElementNS(vnode.ns, tag)
         : nodeOps.createElement(tag, vnode)
@@ -185,24 +187,32 @@ export function createPatchFunction (backend) {
           if (isDef(data)) {
             invokeCreateHooks(vnode, insertedVnodeQueue)
           }
+          /*
+            最后调用 insert 方法把 DOM 插入到父节点中，因为是递归调用，
+            子元素会优先调用 insert，所以整个 vnode 树节点的插入顺序是先子后父。
+            来看一下 insert 方法，它的定义在 src/core/vdom/patch.js 上。
+          */
+          // 插入
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 创建子节点
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
+        // 父节点插入
         insert(parentElm, vnode.elm, refElm)
       }
 
       if (process.env.NODE_ENV !== 'production' && data && data.pre) {
         creatingElmInVPre--
       }
-    } else if (isTrue(vnode.isComment)) {
+    } else if (isTrue(vnode.isComment)) { // 注释节点
       vnode.elm = nodeOps.createComment(vnode.text)
       insert(parentElm, vnode.elm, refElm)
     } else {
-      vnode.elm = nodeOps.createTextNode(vnode.text)
+      vnode.elm = nodeOps.createTextNode(vnode.text) // 文本节点
       insert(parentElm, vnode.elm, refElm)
     }
   }
@@ -268,7 +278,7 @@ export function createPatchFunction (backend) {
     // a reactivated keep-alive component doesn't insert itself
     insert(parentElm, vnode.elm, refElm)
   }
-
+  // 插入到真实dom中
   function insert (parent, elm, ref) {
     if (isDef(parent)) {
       if (isDef(ref)) {
@@ -280,7 +290,12 @@ export function createPatchFunction (backend) {
       }
     }
   }
-
+  // 创建子节点
+  /*
+    createChildren 的逻辑很简单，实际上是遍历子虚拟节点，
+    递归调用 createElm，这是一种常用的深度优先的遍历算法，
+    这里要注意的一点是在遍历过程中会把 vnode.elm 作为父容器的 DOM 节点占位符传入。
+  */
   function createChildren (vnode, children, insertedVnodeQueue) {
     if (Array.isArray(children)) {
       if (process.env.NODE_ENV !== 'production') {
@@ -681,8 +696,21 @@ export function createPatchFunction (backend) {
       return node.nodeType === (vnode.isComment ? 8 : 3)
     }
   }
+  // 调用这里
 
+  /*
+  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
+    if (!prevVnode) {
+      // initial render
+      vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false )
+    } else {
+      // updates
+      vm.$el = vm.__patch__(prevVnode, vnode)
+    }
+   */
+  // __patch__为这里的patch方法
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
+    debugger
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
       return
@@ -696,7 +724,9 @@ export function createPatchFunction (backend) {
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {
+      // 是否为真实的vnode
       const isRealElement = isDef(oldVnode.nodeType)
+      // 相同的节点
       if (!isRealElement && sameVnode(oldVnode, vnode)) {
         // patch existing root node
         patchVnode(oldVnode, vnode, insertedVnodeQueue, removeOnly)
@@ -705,6 +735,7 @@ export function createPatchFunction (backend) {
           // mounting to a real element
           // check if this is server-rendered content and if we can perform
           // a successful hydration.
+          // ssr 相关
           if (oldVnode.nodeType === 1 && oldVnode.hasAttribute(SSR_ATTR)) {
             oldVnode.removeAttribute(SSR_ATTR)
             hydrating = true
@@ -733,6 +764,7 @@ export function createPatchFunction (backend) {
         const parentElm = nodeOps.parentNode(oldElm)
 
         // create new node
+        // 创建节点
         createElm(
           vnode,
           insertedVnodeQueue,

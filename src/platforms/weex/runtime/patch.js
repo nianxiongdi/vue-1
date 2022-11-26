@@ -8,7 +8,7 @@ import platformModules from 'weex/runtime/modules/index'
 // the directive module should be applied last, after all
 // built-in modules have been applied.
 const modules = platformModules.concat(baseModules)
-
+// 对比下weex就可以了
 export const patch: Function = createPatchFunction({
   nodeOps,
   modules,
