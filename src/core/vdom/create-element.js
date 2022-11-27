@@ -108,7 +108,7 @@ export function _createElement (
         undefined, undefined, context
       )
     } else if (isDef(Ctor = resolveAsset(context.$options, 'components', tag))) { // 组件创建
-      // component
+      // component 组件的创建
       vnode = createComponent(Ctor, data, context, children, tag)
     } else { // 其他
       // unknown or unlisted namespaced elements

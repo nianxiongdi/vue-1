@@ -12,8 +12,16 @@
     <!-- app -->
     <div id="app">
       {{msg}}
+      <child message="hello!"></child>
+
     </div>
     <script>
+      Vue.component('child', {
+        // 声明 props
+        props: ['message'],
+        // 同样也可以在 vm 实例中像 "this.message" 这样使用
+        template: '<span>{{ message }}</span>'
+      })
       // debugger
       // start app
       new Vue({
@@ -36,8 +44,12 @@
         // },
         mounted() {
           // 为什么可以访问data的数据？
-          console.log(this.msg)
-          console.log(this._data.msg)
+          // console.log(this.msg)
+          // console.log(this._data.msg)
+
+          setTimeout(()=> {
+            this.msg = 123
+          }, 6000)
         }
       })
     </script>

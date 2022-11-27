@@ -15,27 +15,49 @@ export function initExtend (Vue: GlobalAPI) {
 
   /**
    * Class inheritance
+   *  原型继承
    */
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
-    const Super = this
+    const Super = this // this为Vue
     const SuperId = Super.cid
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
-    if (cachedCtors[SuperId]) {
+    if (cachedCtors[SuperId]) { // 缓存的优化
       return cachedCtors[SuperId]
     }
 
     const name = extendOptions.name || Super.options.name
     if (process.env.NODE_ENV !== 'production' && name) {
+      /*
+      function validateComponentName (name) {
+        // 只能是字母-
+        if (!/^[a-zA-Z][\w-]*$/.test(name)) {
+          warn(
+            'Invalid component name: "' + name + '". Component names ' +
+            'can only contain alphanumeric characters and the hyphen, ' +
+            'and must start with a letter.'
+          );
+        }
+        // 内置html标签或是保留name
+        if (isBuiltInTag(name) || config.isReservedTag(name)) {
+          warn(
+            'Do not use built-in or reserved HTML elements as component ' +
+            'id: ' + name
+          );
+        }
+      }
+      */
       validateComponentName(name)
     }
 
+    // 子Vue 让Sub具有Vue的实例
     const Sub = function VueComponent (options) {
       this._init(options)
     }
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
+    // 参数合并
     Sub.options = mergeOptions(
       Super.options,
       extendOptions
@@ -45,9 +67,11 @@ export function initExtend (Vue: GlobalAPI) {
     // For props and computed properties, we define the proxy getters on
     // the Vue instances at extension time, on the extended prototype. This
     // avoids Object.defineProperty calls for each instance created.
+    // props初始化
     if (Sub.options.props) {
       initProps(Sub)
     }
+    // computed初始化
     if (Sub.options.computed) {
       initComputed(Sub)
     }
