@@ -35,7 +35,7 @@ export default class VNode {
     text?: string,
     elm?: Node,
     context?: Component,
-    componentOptions?: VNodeComponentOptions,
+    componentOptions?: VNodeComponentOptions, // 包含子组件，数据等
     asyncFactory?: Function
   ) {
     this.tag = tag

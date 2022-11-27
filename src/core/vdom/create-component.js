@@ -33,6 +33,8 @@ import {
 } from 'weex/runtime/recycle-list/render-component-template'
 
 // inline hooks to be invoked on component VNodes during patch
+// 组件的hook
+// https://juejin.cn/post/7083502693846614023
 const componentVNodeHooks = {
   init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
     if (
@@ -97,10 +99,16 @@ const componentVNodeHooks = {
 }
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
-
+// 创建组件
+// 1. 组件构造器生成
+// 2. 组件vnode 有一些组件hook
+// 3. 生成组件vnode
 export function createComponent (
+  // 可以是组件名 函数 对象
   Ctor: Class<Component> | Function | Object | void,
+  // data
   data: ?VNodeData,
+  // 当前vm实例
   context: Component,
   children: ?Array<VNode>,
   tag?: string
@@ -108,7 +116,8 @@ export function createComponent (
   if (isUndef(Ctor)) {
     return
   }
-
+  // Vue实例
+  // 全局初始化的时候 this.$options._base = Vue
   const baseCtor = context.$options._base
 
   // plain options object: turn it into a constructor
@@ -158,7 +167,7 @@ export function createComponent (
   // extract props
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
-  // functional component
+  // functional component 处理
   if (isTrue(Ctor.options.functional)) {
     return createFunctionalComponent(Ctor, propsData, data, context, children)
   }
@@ -183,10 +192,13 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 安装组件的钩子
   installComponentHooks(data)
 
   // return a placeholder vnode
   const name = Ctor.options.name || tag
+  // vue-component-cid 组件名
+  // 组件的vnode是个null
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
     data, undefined, undefined, undefined, context,
