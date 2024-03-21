@@ -12,36 +12,17 @@
     <!-- app -->
     <div id="app">
       {{msg}}
-      <!-- <child message="hello!"></child> -->
-      <parent />
+      <async-com />
     </div>
     <script>
-      // Vue.mixin({
-      //   data() {
-      //     return {
-      //       msg: 'this is msg. 1' // 移除
-      //     }
-      //   }
-      // })
-      const child = Vue.component('child', {
-        data() {
-          return {
-            data: 'this is chid.'
-          }
-        },
-        template: '<div> {{ data}}  </div>'
+      Vue.component('async-com', function (resolve, reject) {
+        setTimeout(function () {
+        // 向 `resolve` 回调传递组件定义
+          resolve({
+            template: '<div>I am async!</div>'
+          })
+        }, 1000)
       })
-
-      const parent = Vue.component('parent', {
-        data() {
-          return {
-            data: 'this is parant.'
-          }
-        },
- 
-        template: '<div>{{ data }} <child><child/></div>'
-      })
-
       // debugger
       // start app
       const vue = new Vue({

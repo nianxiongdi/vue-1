@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue.js modal component example</title>
+    <!-- Delete ".min" for console warnings in development -->
+    <script src="../../dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+ 
+    <!-- app -->
+    <div id="app">
+      
+        <div v-if="flag">
+            {{msg}}
+        </div>
+        <div v-else>
+            {{random}}
+        </div>
+
+        <button v-on:click="handleClick">click</button>
+        <button v-on:click="randomClick">randomClick</button>
+
+    </div>
+    <script>
+      // debugger
+      // start app
+      const vue = new Vue({
+        el: '#app',
+        data: {
+          msg: 'hello world~',
+          flag: false,
+          random: 0
+        },
+        methods: {
+          handleClick() {
+              this.flag = !this.flag
+              console.log('111')
+          },
+          randomClick() {
+              this.random = Date.now()
+          }
+        }
+  
+      })
+      console.log('>>> vue', vue)
+    </script>
+  </body>
+</html>

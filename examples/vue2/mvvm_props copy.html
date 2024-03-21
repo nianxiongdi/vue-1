@@ -11,35 +11,32 @@
  
     <!-- app -->
     <div id="app">
-      {{msg}}
-      <!-- <child message="hello!"></child> -->
-      <parent />
+      <div v-if="show">
+        {{msg}}
+      </div>
+      <div v-else>
+        {{name}}
+      </div>
+      <button v-on:click="click">按钮</button>
+      <parent :name="name" age="18" />
     </div>
     <script>
-      // Vue.mixin({
-      //   data() {
-      //     return {
-      //       msg: 'this is msg. 1' // 移除
-      //     }
-      //   }
-      // })
-      const child = Vue.component('child', {
+     const parent = Vue.component('parent', {
+        props: ['name', 'school'],
         data() {
           return {
-            data: 'this is chid.'
+            data: 'this is a.'
           }
         },
-        template: '<div> {{ data}}  </div>'
-      })
-
-      const parent = Vue.component('parent', {
-        data() {
-          return {
-            data: 'this is parant.'
-          }
+        mounted() {
+          // 为什么可以访问data的数据？
+          // console.log(this.msg)
+          // console.log(this._data.msg)
+          setTimeout(() => {
+            this.name = 'abc'
+          }, 6000)
         },
- 
-        template: '<div>{{ data }} <child><child/></div>'
+        template: '<div>{{ data }}  {{name}}</div>'
       })
 
       // debugger
@@ -47,7 +44,14 @@
       const vue = new Vue({
         el: '#app',
         data: {
-          msg: 'hello world~'
+          msg: 'hello world~',
+          name: 12,
+          show:true
+        },
+        methods: {
+          click() {
+            this.show = !this.show
+          }
         },
  
         // 实现render会替换到页面上的元素 <div id="app"></div>

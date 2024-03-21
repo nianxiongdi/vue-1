@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue.js modal component example</title>
+    <!-- Delete ".min" for console warnings in development -->
+    <script src="../../dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+ 
+    <!-- app -->
+    <div id="app">
+      
+      <ul :class="bindCls" class="list" v-if="isShow">
+        1231
+        <!-- <li v-for="(item,index) in data" @click="clickItem(index)">{{item}}:{{index}}</li> -->
+      </ul>
+    
+    </div>
+    <script>
+      // debugger
+      // start app
+      const vue = new Vue({
+        el: '#app',
+        data: {
+          data: [1, 2, 3, 4],
+          isShow: true
+        }
+      })
+      console.log('>>> vue', vue)
+    </script>
+  </body>
+</html>

@@ -69,6 +69,7 @@ export function parseHTML (html, options) {
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
         // Comment:
+        // comment - <!\--
         if (comment.test(html)) {
           const commentEnd = html.indexOf('-->')
 
@@ -80,8 +81,8 @@ export function parseHTML (html, options) {
             continue
           }
         }
-
         // http://en.wikipedia.org/wiki/Conditional_comment#Downlevel-revealed_conditional_comment
+        // conditionalComment
         if (conditionalComment.test(html)) {
           const conditionalEnd = html.indexOf(']>')
 
@@ -201,6 +202,7 @@ export function parseHTML (html, options) {
         match.attrs.push(attr)
       }
       if (end) {
+        // 如果是单标签，那么 unarySlash 的值是 /，比如 <input />
         match.unarySlash = end[1]
         advance(end[0].length)
         match.end = index

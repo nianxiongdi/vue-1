@@ -40,15 +40,16 @@ const componentVNodeHooks = {
     if (
       vnode.componentInstance &&
       !vnode.componentInstance._isDestroyed &&
-      vnode.data.keepAlive
+      vnode.data.keepAlive // keepalice逻辑
     ) {
       // kept-alive components, treat as a patch
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 返回的是vm实例
       const child = vnode.componentInstance = createComponentInstanceForVnode(
-        vnode,
-        activeInstance
+        vnode, // 子组件vnode
+        activeInstance // 当前的vue实例
       )
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
     }
@@ -133,8 +134,9 @@ export function createComponent (
     }
     return
   }
-
-  // async component
+   
+  // debugger
+  // async component 异步组件
   let asyncFactory
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
@@ -216,13 +218,18 @@ export function createComponent (
 
   return vnode
 }
-
+/**
+ * vnode - 子节点的vnode 是个占位节点
+ *   里面的componentOptions有  { Ctor, propsData, listeners, tag, children }
+ *    Ctor继承于 Vue的子组件的构造函数，有init方法
+ * parent vm实例 表示当前激活的组件实例
+*/
 export function createComponentInstanceForVnode (
   vnode: any, // we know it's MountedComponentVNode but flow doesn't
-  parent: any, // activeInstance in lifecycle state
+  parent: any, // activeInstance in lifecycle state。// s
 ): Component {
   const options: InternalComponentOptions = {
-    _isComponent: true,
+    _isComponent: true, // 设置为true
     _parentVnode: vnode,
     parent
   }
@@ -232,6 +239,8 @@ export function createComponentInstanceForVnode (
     options.render = inlineTemplate.render
     options.staticRenderFns = inlineTemplate.staticRenderFns
   }
+  // 执行子组件的构造组件
+  // 继承于 Vue的子组件的构造函数
   return new vnode.componentOptions.Ctor(options)
 }
 

@@ -33,11 +33,11 @@ export default class Watcher {
   sync: boolean;
   dirty: boolean;
   active: boolean;
-  dep: Dep;
+  dep: Dep; // 旧dep列表
   deps: Array<Dep>;
-  newDeps: Array<Dep>;
-  depIds: SimpleSet;
-  newDepIds: SimpleSet;
+  newDeps: Array<Dep>; // 新dep列表
+  depIds: SimpleSet; // 旧dep id集合
+  newDepIds: SimpleSet; // 新dep id集合
   before: ?Function;
   getter: Function;
   value: any;
@@ -150,6 +150,7 @@ export default class Watcher {
         dep.removeSub(this)
       }
     }
+
     let tmp = this.depIds
     this.depIds = this.newDepIds
     this.newDepIds = tmp
@@ -215,6 +216,7 @@ export default class Watcher {
       const oldValue = this.value
       this.value = value
       this.dirty = false
+      // 用户watch
       if (this.user) {
         try {
           cb.call(this.vm, value, oldValue)

@@ -18,6 +18,7 @@ export function initExtend (Vue: GlobalAPI) {
    *  原型继承
    */
   Vue.extend = function (extendOptions: Object): Function {
+    // debugger
     extendOptions = extendOptions || {}
     const Super = this // this为Vue
     const SuperId = Super.cid

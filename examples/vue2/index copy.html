@@ -12,44 +12,42 @@
     <!-- app -->
     <div id="app">
       {{msg}}
-      <!-- <child message="hello!"></child> -->
-      <parent />
+      <child message="hello!"></child>
+
     </div>
     <script>
-      // Vue.mixin({
-      //   data() {
-      //     return {
-      //       msg: 'this is msg. 1' // 移除
-      //     }
-      //   }
-      // })
       const child = Vue.component('child', {
         data() {
           return {
-            data: 'this is chid.'
+            info: 'this is info.'
           }
         },
-        template: '<div> {{ data}}  </div>'
+        // 声明 props
+        props: ['message'],
+        // 同样也可以在 vm 实例中像 "this.message" 这样使用
+        template: '<span>{{ info }}</span>',
+        created(){
+          console.log(' >>> child created.')
+        },
+        mounted() {
+          console.log(' >>> child mounted.')
+        }
+      })
+      console.log('>>> child', child.options)
+      Vue.mixin({
+        created() {
+          console.log(' >>> parent created.')
+        }
       })
 
-      const parent = Vue.component('parent', {
-        data() {
-          return {
-            data: 'this is parant.'
-          }
-        },
- 
-        template: '<div>{{ data }} <child><child/></div>'
-      })
 
       // debugger
       // start app
-      const vue = new Vue({
+      new Vue({
         el: '#app',
         data: {
           msg: 'hello world~'
         },
- 
         // 实现render会替换到页面上的元素 <div id="app"></div>
         // render(createElement){
         //   console.log(createElement('div', {
@@ -67,12 +65,12 @@
           // 为什么可以访问data的数据？
           // console.log(this.msg)
           // console.log(this._data.msg)
-          setTimeout(() => {
+
+          setTimeout(()=> {
             this.msg = 123
           }, 6000)
         }
       })
-      console.log('>>> vue', vue)
     </script>
   </body>
 </html>

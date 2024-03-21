@@ -46,7 +46,13 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   Vue.nextTick = nextTick
 
   Vue.options = Object.create(null)
-  // 
+  /*
+    export const ASSET_TYPES = [
+      'component',
+      'directive',
+      'filter'
+    ]
+  */
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)
   })
@@ -65,4 +71,5 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   initExtend(Vue)
   // 获取一些全局的方法
   initAssetRegisters(Vue)
+  // debugger
 }

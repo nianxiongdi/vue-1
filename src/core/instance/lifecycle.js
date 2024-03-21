@@ -17,7 +17,7 @@ import {
   emptyObject,
   validateProp
 } from '../util/index'
-
+// 定义
 export let activeInstance: any = null
 export let isUpdatingChildComponent: boolean = false
 
@@ -25,14 +25,15 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
-  let parent = options.parent
+  let parent = options.parent // 这里其实是avtiveInstance
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
+    // 父组件的vm中，通过$children保持子组件的实例
     parent.$children.push(vm)
   }
-
+  // 子组件$parent 指向父组件的vm
   vm.$parent = parent
   vm.$root = parent ? parent.$root : vm
 
@@ -50,13 +51,16 @@ export function initLifecycle (vm: Component) {
 export function lifecycleMixin (Vue: Class<Component>) {
   // 首次渲染_update
   // 数据改变的时候 会调用_update
+  // patch是深度遍历的过程
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
+    // debugger
     const vm: Component = this
     const prevEl = vm.$el
     const prevVnode = vm._vnode
     const prevActiveInstance = activeInstance
-    activeInstance = vm
-    vm._vnode = vnode
+    activeInstance = vm // 保持当前vm的实例
+    // _vnode 是渲染的vnode $vnode是占位符 vnode
+    vm._vnode = vnode 
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     if (!prevVnode) {
@@ -66,7 +70,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
       // updates
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
-    activeInstance = prevActiveInstance
+    activeInstance = prevActiveInstance // patch更新完后，恢复上级的实例
     // update __vue__ reference
     if (prevEl) {
       prevEl.__vue__ = null
@@ -190,6 +194,8 @@ export function mountComponent (
     // this
     updateComponent = () => {
       // vm._render()会生成vnode,把vnode传入到_update中  hydrating和服务端相关的
+      // 这里
+      console.log('>>>> vm._render()', vm._render())
       vm._update(vm._render(), hydrating)
     }
   }

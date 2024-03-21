@@ -12,9 +12,11 @@ import {
 
 export const MAX_UPDATE_COUNT = 100
 
+// 各种Watcher执行队列，无论是render watcher、user watcher还是computed watcher，
+// 只要不是重复的Watcher，最终都会被推入到queue队列数组中。
 const queue: Array<Watcher> = []
-const activatedChildren: Array<Component> = []
-let has: { [key: number]: ?true } = {}
+const activatedChildren: Array<Component> = [] 
+let has: { [key: number]: ?true } = {} // 用来防止重复添加Watcher的标志对象：
 let circular: { [key: number]: number } = {}
 let waiting = false
 let flushing = false
@@ -41,10 +43,14 @@ function flushSchedulerQueue () {
 
   // Sort queue before flush.
   // This ensures that:
+  // 组件的更新从父到子 组件的创建也是从父到子
   // 1. Components are updated from parent to child. (because parent is always
   //    created before the child)
+  // 当用户在组件中写一个watch属性，创建一个user watcher. 或使用$watch 创建一个用户watcher
+  // 用户watcher是在render watcher之前的
   // 2. A component's user watchers are run before its render watcher (because
   //    user watchers are created before the render watcher)
+  // 组件的销毁是在父组件的watcher回调中执行，子组件的watcher不用执行了
   // 3. If a component is destroyed during a parent component's watcher run,
   //    its watchers can be skipped.
   queue.sort((a, b) => a.id - b.id)

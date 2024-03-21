@@ -45,7 +45,9 @@ if (process.env.NODE_ENV !== 'production') {
 /**
  * Helper that recursively merges two data objects together.
  */
+// 将from的属性添加到to上，最后返回to
 function mergeData (to: Object, from: ?Object): Object {
+  // debugger
   if (!from) return to
   let key, toVal, fromVal
   const keys = Object.keys(from)
@@ -53,12 +55,15 @@ function mergeData (to: Object, from: ?Object): Object {
     key = keys[i]
     toVal = to[key]
     fromVal = from[key]
+    // from的key 不包含在to中，则直接进行设置在to中
     if (!hasOwn(to, key)) {
       set(to, key, fromVal)
+    // 若值都是纯对象，则继续进行合并
     } else if (isPlainObject(toVal) && isPlainObject(fromVal)) {
       mergeData(toVal, fromVal)
     }
   }
+  // 返回to
   return to
 }
 
@@ -144,7 +149,7 @@ function mergeHook (
         : [childVal]
     : parentVal
 }
-
+// 声明周期的定义
 LIFECYCLE_HOOKS.forEach(hook => {
   strats[hook] = mergeHook
 })
@@ -362,6 +367,7 @@ function assertObjectType (name: string, value: any, vm: ?Component) {
  * Merge two option objects into a new one.
  * Core utility used in both instantiation and inheritance.
  */
+// parent与child合并
 export function mergeOptions (
   parent: Object,
   child: Object,
@@ -398,6 +404,7 @@ export function mergeOptions (
     }
   }
   function mergeField (key) {
+    // strats 参数的合并策略
     const strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
   }

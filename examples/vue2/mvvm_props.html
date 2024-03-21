@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue.js modal component example</title>
+    <!-- Delete ".min" for console warnings in development -->
+    <script src="../../dist/vue.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+ 
+    <!-- app -->
+    <div id="app">
+      <div v-if="show">
+        {{msg}}
+      </div>
+      <div v-else>
+        {{name}}
+      </div>
+      {{show}}
+      <button v-on:click="click">按钮</button>
+    </div>
+    <script>
+      // start app
+      const vue = new Vue ({
+        el: '#app',
+        data: {
+          msg: 'hello world~',
+          name: 12,
+          show: true
+        },
+        methods: {
+          click () {
+            this.show = !this.show
+
+            // this.$nextTick(() => {
+            //   console.log('>>> show', this.show)
+            // })
+
+            // setTimeout(() => {
+            //   console.log('>>> setTimeout', this.show)
+            // })
+            this.msg = '执行顺序 同步 => promise => setTimeout'
+              console.log('start')
+              setTimeout(() => {
+                console.log('timeout')
+              }, 0)
+              this.$nextTick(() => {
+                console.log('nextTick')
+                this.$nextTick(() => {console.log('nextTick2')})
+                setTimeout(() => {
+                  console.log('timeout2')
+                }, 0)
+              })
+              console.log('end')
+
+          }
+        },
+        mounted () {
+          // this.$nextTick(() => {
+          //   this.show = 123
+          // })
+
+          setTimeout(() => {
+            this.show = 123
+          })
+        }
+      })
+      console.log('>>> vue', vue)
+    </script>
+  </body>
+</html>

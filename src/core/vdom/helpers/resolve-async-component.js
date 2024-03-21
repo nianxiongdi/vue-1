@@ -23,7 +23,7 @@ function ensureCtor (comp: any, base) {
     ? base.extend(comp)
     : comp
 }
-
+// 创建空节点
 export function createAsyncPlaceholder (
   factory: Function,
   data: ?VNodeData,

@@ -37,6 +37,7 @@ const sharedPropertyDefinition = {
 
 export function proxy (target: Object, sourceKey: string, key: string) {
   // this.msg -> vm._data.msg - this[sourceKey][key]
+  // props, key, value
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
   }
@@ -77,7 +78,9 @@ function initProps (vm: Component, propsOptions: Object) {
   if (!isRoot) {
     toggleObserving(false)
   }
+  // 遍历 props 对象
   for (const key in propsOptions) {
+    // 缓存 key
     keys.push(key)
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
@@ -118,7 +121,7 @@ function initProps (vm: Component, propsOptions: Object) {
  * 初始化data，data可以是function或Object
 */
 function initData (vm: Component) {
-  let data = vm.$options.data
+  let data = vm.$options.data // 这里的date若是function 则为mergedDataFn函数
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -341,7 +344,7 @@ export function stateMixin (Vue: Class<Component>) {
 
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
-
+  // 用户watch
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
